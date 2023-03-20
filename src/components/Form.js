@@ -1,20 +1,17 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
   Text,
-  Alert,
-  Button,
   SafeAreaView,
-  Modal,
   TextInput,
   Pressable,
-} from 'react-native';
-import {generateId} from '../helpers';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+} from "react-native";
+import { generateId } from "../helpers";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Form = ({task, setTask, tasks, setTasks, modalVisible, setModalVisible}) => {
-  const [taskName, setTaskName] = useState('');
+const Form = ({ task, setTask, tasks, setTasks }) => {
+  const [taskName, setTaskName] = useState("");
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -24,16 +21,16 @@ const Form = ({task, setTask, tasks, setTasks, modalVisible, setModalVisible}) =
   }, [task]);
 
   const handleTask = () => {
-    const storeData = async value => {
+    const storeData = async (value) => {
       try {
         const jsonValue = JSON.stringify(value);
-        console.log('Justo antes de almacenar', jsonValue);
-        await AsyncStorage.setItem('tasks', jsonValue);
+        console.log("Justo antes de almacenar", jsonValue);
+        await AsyncStorage.setItem("tasks", jsonValue);
       } catch (e) {
         console.log(e);
       }
     };
-    if (taskName === '') {
+    if (taskName === "") {
       setError(true);
       return;
     }
@@ -44,8 +41,8 @@ const Form = ({task, setTask, tasks, setTasks, modalVisible, setModalVisible}) =
 
     if (task.id) {
       taskObject.id = task.id;
-      const tasksUpdated = tasks.map(taskState =>
-        taskState.id === task.id ? taskObject : taskState,
+      const tasksUpdated = tasks.map((taskState) =>
+        taskState.id === task.id ? taskObject : taskState
       );
 
       setTasks(tasksUpdated);
@@ -57,53 +54,50 @@ const Form = ({task, setTask, tasks, setTasks, modalVisible, setModalVisible}) =
 
       storeData(tasks);
     }
-    setTaskName('');
-    setModalVisible(false);
+    setTaskName("");
   };
   return (
-    <Modal animationType="slide" visible={modalVisible}>
-      <SafeAreaView>
-        <View style={styles.container}>
-          <TextInput
-            style={styles.input}
-            placeholder="Introduce una nueva tarea"
-            value={taskName}
-            onChangeText={setTaskName}
-          />
-          <Pressable onPress={handleTask} style={styles.btnNewTask}>
-            <Text style={styles.btnNewTaskText}>{task.id ? '-' : '+'}</Text>
-          </Pressable>
-        </View>
-      </SafeAreaView>
-    </Modal>
+    <SafeAreaView>
+      <View style={styles.container}>
+        <TextInput
+          style={styles.input}
+          placeholder="Introduce una nueva tarea"
+          value={taskName}
+          onChangeText={setTaskName}
+        />
+        <Pressable onPress={handleTask} style={styles.btnNewTask}>
+          <Text style={styles.btnNewTaskText}>{task.id ? "-" : "+"}</Text>
+        </Pressable>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 10,
-    flexDirection: 'row',
+    flexDirection: "row",
     columnGap: 10,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
     marginBottom: 30,
   },
 
   input: {
-    borderWidth: 1,
-    paddingLeft: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "grey",
+    padding: 10,
     fontSize: 20,
-    borderRadius: 50,
-    width: '80%',
+    borderRadius: 5,
+    flex: 11,
   },
   btnNewTask: {
-    backgroundColor: 'green',
-    paddingHorizontal: 10,
-    width: 50,
-    height: 50,
     borderRadius: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
   },
-  btnNewTaskText: {fontWeight: 'bold', fontSize: 30, color: 'white'},
+  btnNewTaskText: {
+    fontSize: 30,
+  },
 });
 export default Form;
